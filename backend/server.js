@@ -1,5 +1,6 @@
 const express = require('express');
 require('dotenv').config();
+const { errorHandler } = require('./middleware/errorMiddleware');
 
 const PORT = process.env.PORT || 5000;
 
@@ -10,5 +11,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Routes
 app.use('/api/users', require('./routes/userRoutes'));
+
+app.use(errorHandler);
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
