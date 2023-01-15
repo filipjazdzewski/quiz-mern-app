@@ -1,0 +1,11 @@
+{
+  "name": "quiz-app-project",
+  "version": "1.0.0",
+  "description": "Quiz App project for University Of Gdansk",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server.js"
+  },
+  "author": "Filip Jażdżewski",
+  "license": "MIT"
+}
