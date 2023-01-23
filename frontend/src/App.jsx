@@ -10,7 +10,7 @@ function App() {
       <Router>
         <div>
           <Navbar />
-          <main className='container mx-auto px-3 pb-12'>
+          <main className='container sm:max-w-screen-lg mx-auto px-3 pb-12'>
             <Routes>
               <Route path='/' element={<Home />} />
               <Route path='/register' element={<Register />} />
