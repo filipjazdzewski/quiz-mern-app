@@ -1,5 +1,9 @@
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { register } from '../features/auth/authSlice';
 
 const RegisterSchema = Yup.object().shape({
   name: Yup.string()
@@ -19,6 +23,16 @@ const RegisterSchema = Yup.object().shape({
 });
 
 function Register() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { isLoading } = useSelector((state) => state.auth);
+
+  // @TODO: add a spinner component
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className='max-w-lg md:max-w-screen-md mx-auto'>
       <Formik
@@ -29,10 +43,20 @@ function Register() {
           password2: '',
         }}
         validationSchema={RegisterSchema}
-        onSubmit={(values, { resetForm }) => {
-          setTimeout(() => {
-            resetForm();
-          }, 300);
+        onSubmit={(values) => {
+          const { name, email, password } = values;
+          const userData = {
+            name,
+            email,
+            password,
+          };
+          dispatch(register(userData))
+            .unwrap()
+            .then((user) => {
+              toast.success(`Registered new user - ${user.name}`);
+              navigate('/');
+            })
+            .catch(toast.error);
         }}
       >
         {({ errors, touched }) => (
