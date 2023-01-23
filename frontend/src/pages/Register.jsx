@@ -1,7 +1,22 @@
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 
-const RegisterSchema = Yup.object().shape({});
+const RegisterSchema = Yup.object().shape({
+  name: Yup.string()
+    .min(3, 'Name is too Short')
+    .max(18, 'Name is too Long')
+    .required('Name is required'),
+  email: Yup.string()
+    .email('Invalid email format')
+    .required('Email is required'),
+  password: Yup.string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(32, 'Password must not exceed 32 characters')
+    .required('Password is required'),
+  password2: Yup.string()
+    .oneOf([Yup.ref('password'), null], 'Confirm Password does not match')
+    .required('Confirm Password is required'),
+});
 
 function Register() {
   return (
