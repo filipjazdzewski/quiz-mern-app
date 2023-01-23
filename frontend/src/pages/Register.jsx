@@ -81,13 +81,11 @@ function Register() {
                         placeholder='name'
                         className='input input-bordered'
                       />
-                      <div
-                        className={`text-error text-xs italic ${
-                          errors.name && touched.name ? 'visible' : 'invisible'
-                        }`}
-                      >
-                        {errors.name}
-                      </div>
+                      {errors.name && touched.name && (
+                        <div className='text-error text-xs italic'>
+                          {errors.name}
+                        </div>
+                      )}
                     </div>
                     <div className='form-control'>
                       <label className='label'>
@@ -99,15 +97,11 @@ function Register() {
                         placeholder='email'
                         className='input input-bordered'
                       />
-                      <div
-                        className={`text-error text-xs italic ${
-                          errors.email && touched.email
-                            ? 'visible'
-                            : 'invisible'
-                        }`}
-                      >
-                        {errors.email}
-                      </div>
+                      {errors.email && touched.email && (
+                        <div className='text-error text-xs italic'>
+                          {errors.email}
+                        </div>
+                      )}
                     </div>
                     <div className='form-control'>
                       <label className='label'>
@@ -119,15 +113,11 @@ function Register() {
                         placeholder='password'
                         className='input input-bordered'
                       />
-                      <div
-                        className={`text-error text-xs italic ${
-                          errors.password && touched.password
-                            ? 'visible'
-                            : 'invisible'
-                        }`}
-                      >
-                        {errors.password}
-                      </div>
+                      {errors.password && touched.password && (
+                        <div className='text-error text-xs italic'>
+                          {errors.password}
+                        </div>
+                      )}
                     </div>
                     <div className='form-control'>
                       <label className='label'>
@@ -139,15 +129,11 @@ function Register() {
                         placeholder='password'
                         className='input input-bordered'
                       />
-                      <div
-                        className={`text-error text-xs italic ${
-                          errors.password2 && touched.password2
-                            ? 'visible'
-                            : 'invisible'
-                        }`}
-                      >
-                        {errors.password2}
-                      </div>
+                      {errors.password2 && touched.password2 && (
+                        <div className='text-error text-xs italic'>
+                          {errors.password2}
+                        </div>
+                      )}
                     </div>
                     <div className='form-control mt-6'>
                       <button type='submit' className='btn btn-primary'>
