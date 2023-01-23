@@ -4,7 +4,8 @@ import { RxHamburgerMenu } from 'react-icons/rx';
 
 function Navbar() {
   return (
-    <nav className='navbar mb-12 shadow-lg bg-base-200 bg-opacity-40 backdrop-filter backdrop-blur-lg border-b border-base-300 sticky top-0 text-neutral-content'>
+    // z-50 makes the navbar on top of every other component fixing the bugs where it was under
+    <nav className='navbar mb-12 shadow-lg bg-base-200 bg-opacity-40 backdrop-filter backdrop-blur-lg border-b border-base-300 sticky top-0 z-50 text-neutral-content'>
       <div className='navbar-start'>
         <Link to='/' className='text-2xl sm:text-4xl font-bold'>
           QuizApp

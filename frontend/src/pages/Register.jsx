@@ -37,7 +37,7 @@ function Register() {
       >
         {({ errors, touched }) => (
           <Form>
-            <div className='hero bg-base-200 py-3 px-4 rounded-box'>
+            <div className='hero bg-base-200 py-3 px-4 shadow-xl rounded-box'>
               <div className='hero-content flex-col md:flex-row-reverse'>
                 <div className='text-center md:text-left'>
                   <h1 className='text-5xl font-bold'>Register now!</h1>
@@ -45,7 +45,7 @@ function Register() {
                     Create new quizes and place high in rankings!
                   </p>
                 </div>
-                <div className='card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100'>
+                <div className='card flex-shrink-0 w-full max-w-sm shadow-xl bg-base-100'>
                   <div className='card-body'>
                     <div className='form-control'>
                       <label className='label'>
