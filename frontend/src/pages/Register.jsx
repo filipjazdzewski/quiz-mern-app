@@ -1,5 +1,9 @@
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { register } from '../features/auth/authSlice';
 
 const RegisterSchema = Yup.object().shape({
   name: Yup.string()
@@ -19,6 +23,16 @@ const RegisterSchema = Yup.object().shape({
 });
 
 function Register() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { isLoading } = useSelector((state) => state.auth);
+
+  // @TODO: add a spinner component
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className='max-w-lg md:max-w-screen-md mx-auto'>
       <Formik
@@ -29,10 +43,20 @@ function Register() {
           password2: '',
         }}
         validationSchema={RegisterSchema}
-        onSubmit={(values, { resetForm }) => {
-          setTimeout(() => {
-            resetForm();
-          }, 300);
+        onSubmit={(values) => {
+          const { name, email, password } = values;
+          const userData = {
+            name,
+            email,
+            password,
+          };
+          dispatch(register(userData))
+            .unwrap()
+            .then((user) => {
+              toast.success(`Registered new user - ${user.name}`);
+              navigate('/');
+            })
+            .catch(toast.error);
         }}
       >
         {({ errors, touched }) => (
@@ -57,13 +81,11 @@ function Register() {
                         placeholder='name'
                         className='input input-bordered'
                       />
-                      <div
-                        className={`text-error text-xs italic ${
-                          errors.name && touched.name ? 'visible' : 'invisible'
-                        }`}
-                      >
-                        {errors.name}
-                      </div>
+                      {errors.name && touched.name && (
+                        <div className='text-error text-xs italic'>
+                          {errors.name}
+                        </div>
+                      )}
                     </div>
                     <div className='form-control'>
                       <label className='label'>
@@ -75,15 +97,11 @@ function Register() {
                         placeholder='email'
                         className='input input-bordered'
                       />
-                      <div
-                        className={`text-error text-xs italic ${
-                          errors.email && touched.email
-                            ? 'visible'
-                            : 'invisible'
-                        }`}
-                      >
-                        {errors.email}
-                      </div>
+                      {errors.email && touched.email && (
+                        <div className='text-error text-xs italic'>
+                          {errors.email}
+                        </div>
+                      )}
                     </div>
                     <div className='form-control'>
                       <label className='label'>
@@ -95,15 +113,11 @@ function Register() {
                         placeholder='password'
                         className='input input-bordered'
                       />
-                      <div
-                        className={`text-error text-xs italic ${
-                          errors.password && touched.password
-                            ? 'visible'
-                            : 'invisible'
-                        }`}
-                      >
-                        {errors.password}
-                      </div>
+                      {errors.password && touched.password && (
+                        <div className='text-error text-xs italic'>
+                          {errors.password}
+                        </div>
+                      )}
                     </div>
                     <div className='form-control'>
                       <label className='label'>
@@ -115,15 +129,11 @@ function Register() {
                         placeholder='password'
                         className='input input-bordered'
                       />
-                      <div
-                        className={`text-error text-xs italic ${
-                          errors.password2 && touched.password2
-                            ? 'visible'
-                            : 'invisible'
-                        }`}
-                      >
-                        {errors.password2}
-                      </div>
+                      {errors.password2 && touched.password2 && (
+                        <div className='text-error text-xs italic'>
+                          {errors.password2}
+                        </div>
+                      )}
                     </div>
                     <div className='form-control mt-6'>
                       <button type='submit' className='btn btn-primary'>
