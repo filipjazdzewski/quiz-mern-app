@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { login } from '../features/auth/authSlice';
+import Spinner from '../layout/Spinner';
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
@@ -21,9 +22,8 @@ function Login() {
 
   const { isLoading } = useSelector((state) => state.auth);
 
-  // @TODO: add a spinner component
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
 
   return (
