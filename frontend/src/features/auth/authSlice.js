@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import authService from './authService';
 import { extractErrorMessage } from '../../utils';
 
@@ -29,10 +29,21 @@ export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
   }
 });
 
+export const logout = createAction('auth/logout', () => {
+  authService.logout();
+  // return an empty object as our payload as we don't need a payload but the
+  // prepare function requires a payload return
+  return {};
+});
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.user = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(register.pending, (state) => {
