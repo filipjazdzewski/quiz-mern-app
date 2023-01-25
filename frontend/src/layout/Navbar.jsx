@@ -1,5 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { FaSignInAlt, FaUserPlus, FaSignOutAlt } from 'react-icons/fa';
+import {
+  FaSignInAlt,
+  FaUserPlus,
+  FaSignOutAlt,
+  FaPlusCircle,
+} from 'react-icons/fa';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../features/auth/authSlice';
@@ -53,11 +58,18 @@ function Navbar() {
         <div className='hidden sm:block'>
           <ul className='flex justify-end px-2 mx-2 gap-2'>
             {user ? (
-              <li>
-                <button onClick={onLogout} className='btn btn-primary btn-sm'>
-                  <FaSignOutAlt /> Logout
-                </button>
-              </li>
+              <>
+                <li>
+                  <Link to='/quiz/creator' className='btn btn-ghost btn-sm'>
+                    <FaPlusCircle /> Create a quiz
+                  </Link>
+                </li>
+                <li>
+                  <button onClick={onLogout} className='btn btn-primary btn-sm'>
+                    <FaSignOutAlt /> Logout
+                  </button>
+                </li>
+              </>
             ) : (
               <>
                 <li>
@@ -84,6 +96,11 @@ function Navbar() {
           >
             {user ? (
               <>
+                <li className='hover-bordered'>
+                  <Link to='/quiz/creator'>
+                    <FaPlusCircle /> Create a quiz
+                  </Link>
+                </li>
                 <li className='hover-bordered'>
                   <button onClick={onLogout}>
                     <FaSignOutAlt /> Logout
