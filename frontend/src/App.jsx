@@ -1,10 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PrivateRoute from './components/PrivateRoute';
 import Navbar from './layout/Navbar';
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import QuizCreator from './pages/QuizCreator';
 
 function App() {
   return (
@@ -17,6 +19,14 @@ function App() {
               <Route path='/' element={<Home />} />
               <Route path='/register' element={<Register />} />
               <Route path='/login' element={<Login />} />
+              <Route
+                path='/quiz/creator'
+                element={
+                  <PrivateRoute>
+                    <QuizCreator />
+                  </PrivateRoute>
+                }
+              />
             </Routes>
           </main>
         </div>
