@@ -30,9 +30,11 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Routes
+// **** ROUTES ****
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/quizzes', require('./routes/quizRoutes'));
+app.use('/api/questions', require('./routes/questionRoutes'));
+// **** ROUTES ****
 
 app.use(errorHandler);
 
