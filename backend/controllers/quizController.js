@@ -13,12 +13,14 @@ const getQuizzes = asyncHandler(async (req, res) => {
     const quizes = await Quiz.aggregate([
       { $match: { title: { $regex: new RegExp(search), $options: 'i' } } },
       { $sort: { updatedAt: -1 } },
-    ]);
+    ]).populate('questions');
 
     res.status(200).json(quizes);
   }
 
-  const quizes = await Quiz.find({}).sort({ updatedAt: -1 });
+  const quizes = await Quiz.find({})
+    .sort({ updatedAt: -1 })
+    .populate('questions');
 
   res.status(200).json(quizes);
 });
