@@ -1,27 +1,5 @@
 const mongoose = require('mongoose');
 
-const questionSchema = mongoose.Schema({
-  typeOfQuestion: {
-    type: String,
-    required: [true, 'Please choose the question type'],
-    enum: ['SingleChoice', 'MultipleChoices', 'TrueOrFalse'],
-    default: 'SingleChoice',
-  },
-  question: {
-    type: String,
-    required: [true, 'Please add a question content'],
-  },
-  options: [
-    {
-      option: {
-        type: String,
-        isCorrect: Boolean,
-        required: [true, 'Please add an option'],
-      },
-    },
-  ],
-});
-
 const quizSchema = mongoose.Schema(
   {
     user: {
@@ -32,9 +10,20 @@ const quizSchema = mongoose.Schema(
     title: {
       type: String,
       required: [true, 'Please add a quiz title'],
+      max: 40,
     },
-    questions: [questionSchema],
-    ranking: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Game' }],
+    questions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Question',
+      },
+    ],
+    ranking: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Game',
+      },
+    ],
   },
   {
     timestamps: true,
