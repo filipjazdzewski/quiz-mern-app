@@ -1,7 +1,11 @@
-import React from 'react';
+import QuizList from '../components/quiz/QuizList';
 
 function Home() {
-  return <div>Home</div>;
+  return (
+    <>
+      <QuizList />
+    </>
+  );
 }
 
 export default Home;
