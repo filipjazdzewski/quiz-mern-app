@@ -20,6 +20,19 @@ export const getQuizzes = createAsyncThunk(
   }
 );
 
+// Create a quiz
+export const createQuiz = createAsyncThunk(
+  'quizzes/create',
+  async (quizData, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await quizService.createQuiz(quizData, token);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(extractErrorMessage(error));
+    }
+  }
+);
+
 export const quizSlice = createSlice({
   name: 'quiz',
   initialState,
