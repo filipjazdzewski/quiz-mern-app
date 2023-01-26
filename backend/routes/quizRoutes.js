@@ -1,9 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const { getAllQuizzes, createQuiz } = require('../controllers/quizController');
+const {
+  getQuizzes,
+  getQuiz,
+  createQuiz,
+  deleteQuiz,
+  updateQuiz,
+} = require('../controllers/quizController');
 
 const { protect } = require('../middleware/authMiddleware');
 
-router.route('/').get(getAllQuizzes).post(protect, createQuiz);
+router.route('/').get(getQuizzes).post(protect, createQuiz);
+
+router
+  .route('/:id')
+  .get(protect, getQuiz)
+  .delete(protect, deleteQuiz)
+  .put(protect, updateQuiz);
 
 module.exports = router;
