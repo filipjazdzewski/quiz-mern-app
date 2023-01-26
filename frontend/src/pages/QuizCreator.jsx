@@ -1,7 +1,5 @@
-import React from 'react';
-
 function QuizCreator() {
-  return <div>QuizCreator</div>;
+  return <div className='max-w-lg md:max-w-screen-md mx-auto'>QUIZCREATOR</div>;
 }
 
 export default QuizCreator;
