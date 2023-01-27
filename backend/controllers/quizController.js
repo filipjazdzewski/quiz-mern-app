@@ -10,19 +10,19 @@ const getQuizzes = asyncHandler(async (req, res) => {
   const { search } = req.query;
 
   if (search) {
-    const quizes = await Quiz.aggregate([
+    const quizzes = await Quiz.aggregate([
       { $match: { title: { $regex: new RegExp(search), $options: 'i' } } },
       { $sort: { updatedAt: -1 } },
     ]).populate('questions');
 
-    res.status(200).json(quizes);
+    res.status(200).json(quizzes);
   }
 
-  const quizes = await Quiz.find({})
+  const quizzes = await Quiz.find({})
     .sort({ updatedAt: -1 })
     .populate('questions');
 
-  res.status(200).json(quizes);
+  res.status(200).json(quizzes);
 });
 
 // @desc    Get quiz
@@ -83,7 +83,7 @@ const deleteQuiz = asyncHandler(async (req, res) => {
   await Question.deleteMany({ _id: { $in: quiz.questions } });
   await quiz.remove();
 
-  res.status(200).json({ success: true });
+  res.status(200).json(quiz);
 });
 
 // @desc    Update quiz
