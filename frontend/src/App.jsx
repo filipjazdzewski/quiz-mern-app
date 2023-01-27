@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import QuizCreator from './pages/QuizCreator';
+import QuizCreatorEdit from './pages/QuizCreatorEdit';
 
 function App() {
   return (
@@ -24,6 +25,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <QuizCreator />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path='/quiz/creator/:id'
+                element={
+                  <PrivateRoute>
+                    <QuizCreatorEdit />
                   </PrivateRoute>
                 }
               />
