@@ -82,7 +82,6 @@ export const quizSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getQuizzes.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.quizzes = action.payload;
         state.isLoading = false;
       })
