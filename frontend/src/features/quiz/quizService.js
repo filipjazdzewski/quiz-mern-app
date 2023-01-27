@@ -1,11 +1,24 @@
 import axios from 'axios';
 
 const API_LOCALHOST_URL = import.meta.env.VITE_API;
-const API_URL = `${API_LOCALHOST_URL}/api/quizzes`;
+const API_URL = `${API_LOCALHOST_URL}/api/quizzes/`;
 
-// Get all quizes
+// Get quizes
 const getQuizzes = async () => {
   const response = await axios.get(API_URL);
+
+  return response.data;
+};
+
+// Get quiz by ID
+const getQuiz = async (quizId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.get(API_URL + quizId, config);
 
   return response.data;
 };
@@ -23,6 +36,32 @@ const createQuiz = async (quizData, token) => {
   return response.data;
 };
 
-const quizService = { getQuizzes, createQuiz };
+// Delete quiz by ID
+const deleteQuiz = async (quizId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.delete(API_URL + quizId, config);
+
+  return response.data;
+};
+
+// Update quiz by ID
+const updateQuiz = async (quizId, updateData, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.put(API_URL + quizId, updateData, config);
+
+  return response.data;
+};
+
+const quizService = { getQuizzes, getQuiz, createQuiz, deleteQuiz, updateQuiz };
 
 export default quizService;
