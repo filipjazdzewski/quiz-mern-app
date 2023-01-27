@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 import { getQuizzes } from '../../features/quiz/quizSlice';
 import QuizItem from './QuizItem';
 import Spinner from '../../layout/Spinner';
@@ -10,7 +11,7 @@ function QuizList() {
   const { quizzes, isLoading } = useSelector((state) => state.quiz);
 
   useEffect(() => {
-    dispatch(getQuizzes());
+    dispatch(getQuizzes()).unwrap().catch(toast.error);
   }, [dispatch]);
 
   if (isLoading) {
