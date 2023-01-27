@@ -4,16 +4,29 @@ import { extractErrorMessage } from '../../utils';
 
 const initialState = {
   quizzes: [],
-  quiz: null,
+  quiz: {},
   isLoading: false,
 };
 
-// Get all quizzes
+// Get Quizzes
 export const getQuizzes = createAsyncThunk(
-  'quizzes/getAll',
+  'quizzes/getMany',
   async (_, thunkAPI) => {
     try {
       return await quizService.getQuizzes();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(extractErrorMessage(error));
+    }
+  }
+);
+
+// Get a quiz
+export const getQuiz = createAsyncThunk(
+  'quizzes/get',
+  async (quizId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await quizService.getQuiz(quizId, token);
     } catch (error) {
       return thunkAPI.rejectWithValue(extractErrorMessage(error));
     }
@@ -33,6 +46,32 @@ export const createQuiz = createAsyncThunk(
   }
 );
 
+// Delete a quiz
+export const deleteQuiz = createAsyncThunk(
+  'quizzes/delete',
+  async (quizId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await quizService.deleteQuiz(quizId, token);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(extractErrorMessage(error));
+    }
+  }
+);
+
+// Update a quiz
+export const updateQuiz = createAsyncThunk(
+  'quizzes/update',
+  async (quizId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await quizService.updateQuiz(quizId, token);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(extractErrorMessage(error));
+    }
+  }
+);
+
 export const quizSlice = createSlice({
   name: 'quiz',
   initialState,
@@ -43,10 +82,48 @@ export const quizSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getQuizzes.fulfilled, (state, action) => {
+        console.log(action.payload);
         state.quizzes = action.payload;
         state.isLoading = false;
       })
       .addCase(getQuizzes.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(getQuiz.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getQuiz.fulfilled, (state, action) => {
+        state.quiz = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(getQuiz.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(deleteQuiz.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteQuiz.fulfilled, (state, action) => {
+        const deletedQuiz = action.payload;
+        state.quiz = state.quiz._id === deletedQuiz._id ? {} : state.quiz;
+        state.quizzes = state.quizzes.filter(
+          (quiz) => quiz._id !== deletedQuiz._id
+        );
+        state.isLoading = false;
+      })
+      .addCase(deleteQuiz.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(updateQuiz.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateQuiz.fulfilled, (state, action) => {
+        state.quiz = action.payload;
+        state.quizzes = state.quizzes.map((quiz) =>
+          quiz._id === state.quiz._id ? state.quiz : quiz
+        );
+        state.isLoading = false;
+      })
+      .addCase(updateQuiz.rejected, (state) => {
         state.isLoading = false;
       });
   },
