@@ -72,7 +72,7 @@ function QuizPlay() {
                 Question {currentQuestionIndex + 1}/{questions.length}
               </div>
               <div className='badge badge-secondary badge-outline'>
-                Choose {questions[currentQuestionIndex].typeOfQuestion}
+                Category: {questions[currentQuestionIndex].typeOfQuestion}
               </div>
               <div className='py-4'>
                 {questions[currentQuestionIndex].questionTitle}
