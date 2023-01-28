@@ -1,21 +1,34 @@
+import { toast } from 'react-toastify';
 import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin5Line } from 'react-icons/ri';
-import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteQuiz } from '../../features/quiz/quizSlice';
 
 function QuizItem({ quiz }) {
+  const dispatch = useDispatch();
+
   const { user } = useSelector((state) => state.auth);
   // Check if the logged in user is the author of the quiz
   const isAuthor = quiz.user === user?._id;
 
   // **** QUIZ VARIABLES ****
+  const quizId = quiz._id;
   const quizTitle =
     quiz.title.length > 25 ? `${quiz.title.slice(0, 23)}...` : quiz.title;
-  const howManyQuestions = quiz.questions.lenght ? quiz.questions.lenght : 0;
+  const howManyQuestions = quiz.questions.length;
   const howManyTimesPlayed =
     quiz.ranking.length > 999
       ? `${quiz.ranking.length / 1000}k`
       : quiz.ranking.length;
   // **** QUIZ VARIABLES ****
+
+  const handleDelete = () => {
+    dispatch(deleteQuiz(quizId))
+      .unwrap()
+      .then(toast.success(`Successfully deleted - ${quizTitle}`))
+      .catch(toast.error);
+  };
 
   return (
     <>
@@ -38,15 +51,26 @@ function QuizItem({ quiz }) {
           <div className='card-actions justify-end'>
             {isAuthor && (
               <>
-                <button className='btn btn-primary btn-sm'>
+                <Link
+                  to={`/quiz/creator/${quizId}`}
+                  className='btn btn-primary btn-sm'
+                >
                   <FaEdit />
-                </button>
-                <button className='btn btn-primary btn-sm'>
+                </Link>
+                <button
+                  onClick={handleDelete}
+                  className='btn btn-primary btn-sm'
+                >
                   <RiDeleteBin5Line />
                 </button>
               </>
             )}
-            <button className='btn btn-primary btn-sm'>Play</button>
+            <Link
+              to={`/quiz/play/${quizId}`}
+              className='btn btn-primary btn-sm'
+            >
+              Play
+            </Link>
           </div>
         </div>
       </div>
