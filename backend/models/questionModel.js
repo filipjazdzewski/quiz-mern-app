@@ -14,18 +14,14 @@ const questionSchema = mongoose.Schema({
   },
   options: [
     {
-      option: [
-        {
-          optionTitle: {
-            type: String,
-            required: true,
-          },
-          isCorrect: {
-            type: Boolean,
-            default: false,
-          },
-        },
-      ],
+      optionTitle: {
+        type: String,
+        required: [true, 'Please add a question title'],
+      },
+      isCorrect: {
+        type: Boolean,
+        default: false,
+      },
     },
   ],
 });
