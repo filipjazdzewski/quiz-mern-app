@@ -33,7 +33,7 @@ function Navbar() {
             <input
               type='text'
               placeholder='Search…'
-              className='input input-bordered input-sm w-full sm:w-52 md:w-80 lg:w-96'
+              className='input input-bordered input-sm w-full sm:w-52 md:w-62 lg:w-96'
             />
             <button className='btn btn-square btn-sm'>
               <svg
@@ -55,7 +55,7 @@ function Navbar() {
         </div>
       </div>
       <div className='navbar-end'>
-        <div className='hidden sm:block'>
+        <div className='hidden md:block'>
           <ul className='flex justify-end px-2 mx-2 gap-2'>
             {user ? (
               <>
@@ -86,7 +86,7 @@ function Navbar() {
             )}
           </ul>
         </div>
-        <div className='dropdown dropdown-bottom dropdown-end sm:hidden'>
+        <div className='dropdown dropdown-bottom dropdown-end md:hidden'>
           <label tabIndex={0} className='btn btn-ghost btn-circle btn-sm'>
             <RxHamburgerMenu className='h-6 w-6' />
           </label>
