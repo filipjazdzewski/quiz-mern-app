@@ -36,10 +36,10 @@ const getQuiz = asyncHandler(async (req, res) => {
     throw new Error('Quiz not found');
   }
 
-  if (quiz.user.toString() !== req.user.id) {
-    res.status(401);
-    throw new Error('Not Authorized');
-  }
+  // if (quiz.user.toString() !== req.user.id) {
+  //   res.status(401);
+  //   throw new Error('Not Authorized');
+  // }
 
   res.status(200).json(quiz);
 });

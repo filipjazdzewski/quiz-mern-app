@@ -14,7 +14,7 @@ router.route('/').get(getQuizzes).post(protect, createQuiz);
 
 router
   .route('/:id')
-  .get(protect, getQuiz)
+  .get(getQuiz) // protect (Musze zrobic zeby play mogl wziac bez bycia autorem)
   .delete(protect, deleteQuiz)
   .put(protect, updateQuiz);
 
