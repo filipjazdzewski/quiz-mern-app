@@ -1,6 +1,12 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useSelector } from 'react-redux';
 import PrivateRoute from './components/PrivateRoute';
 import Navbar from './layout/Navbar';
 import Footer from './layout/Footer';
@@ -12,6 +18,8 @@ import QuizCreatorEdit from './pages/QuizCreatorEdit';
 import QuizPlay from './pages/QuizPlay';
 
 function App() {
+  const { user } = useSelector((state) => state.auth);
+
   return (
     <>
       <Router>
@@ -21,8 +29,14 @@ function App() {
           <main className='container sm:max-w-screen-lg mx-auto px-3 pb-12'>
             <Routes>
               <Route path='/' element={<Home />} />
-              <Route path='/register' element={<Register />} />
-              <Route path='/login' element={<Login />} />
+              <Route
+                path='/register'
+                element={user ? <Navigate to='/' /> : <Register />}
+              />
+              <Route
+                path='/login'
+                element={user ? <Navigate to='/' /> : <Login />}
+              />
               <Route
                 path='/quiz/play/:id'
                 element={
