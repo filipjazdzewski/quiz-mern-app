@@ -65,7 +65,12 @@ function QuizItem({ quiz }) {
                 </button>
               </>
             )}
-            <button className='btn btn-primary btn-sm'>Play</button>
+            <Link
+              to={`/quiz/play/${quizId}`}
+              className='btn btn-primary btn-sm'
+            >
+              Play
+            </Link>
           </div>
         </div>
       </div>
