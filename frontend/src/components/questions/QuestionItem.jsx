@@ -18,14 +18,14 @@ function QuestionItem({ question, quizId }) {
       <div className='card bg-base-200 shadow-xl'>
         <div className='card-body p-6 pt-2'>
           <h2 className='card-title'>
-            <div>{question.questionTitle}</div>
-            <div className='badge badge-primary badge-outline'>
-              {question?.options.length} options
-            </div>
-            <div className='badge badge-secondary badge-outline'>
-              {question.typeOfQuestion}
-            </div>
+            <div>Question: {question.questionTitle}</div>
           </h2>
+          <div className='badge badge-primary badge-outline'>
+            {question?.options.length} options
+          </div>
+          <div className='badge badge-secondary badge-outline'>
+            {question.typeOfQuestion}
+          </div>
           <div className='card-actions justify-end'>
             <button onClick={handleDelete} className='btn btn-primary btn-sm'>
               <RiDeleteBin5Line />
