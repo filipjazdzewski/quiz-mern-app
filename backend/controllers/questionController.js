@@ -35,9 +35,17 @@ const getQuestion = asyncHandler(async (req, res) => {
 const createQuestion = asyncHandler(async (req, res) => {
   const { typeOfQuestion, questionTitle, options, quizId } = req.body;
 
-  if (!questionTitle || !quizId) {
+  if (!questionTitle || !quizId || !options) {
     res.status(400);
     throw new Error('Please include all fields');
+  }
+
+  if (options.length < 2) {
+    res.status(400);
+    throw new Error('Minimum 2 options');
+  } else if (options.length > 6) {
+    res.status(400);
+    throw new Error('Maximum 6 options');
   }
 
   const quiz = await Quiz.findById(quizId);
