@@ -11,9 +11,9 @@ const initialState = {
 // Get Quizzes
 export const getQuizzes = createAsyncThunk(
   'quizzes/getMany',
-  async (_, thunkAPI) => {
+  async (searchParam, thunkAPI) => {
     try {
-      return await quizService.getQuizzes();
+      return await quizService.getQuizzes(searchParam);
     } catch (error) {
       return thunkAPI.rejectWithValue(extractErrorMessage(error));
     }
