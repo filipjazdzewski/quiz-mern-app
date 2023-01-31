@@ -1,11 +1,13 @@
 import axios from 'axios';
 
 const API_LOCALHOST_URL = import.meta.env.VITE_API;
-const API_URL = `${API_LOCALHOST_URL}/api/quizzes/`;
+const API_URL = `${API_LOCALHOST_URL}/api/quizzes`;
 
 // Get quizes
-const getQuizzes = async () => {
-  const response = await axios.get(API_URL);
+const getQuizzes = async (searchParam) => {
+  const response = await axios.get(
+    API_URL + (searchParam ? `?search=${searchParam}` : '')
+  );
 
   return response.data;
 };
@@ -18,7 +20,7 @@ const getQuiz = async (quizId, token) => {
     },
   };
 
-  const response = await axios.get(API_URL + quizId, config);
+  const response = await axios.get(API_URL + '/' + quizId, config);
 
   return response.data;
 };
@@ -44,7 +46,7 @@ const deleteQuiz = async (quizId, token) => {
     },
   };
 
-  const response = await axios.delete(API_URL + quizId, config);
+  const response = await axios.delete(API_URL + '/' + quizId, config);
 
   return response.data;
 };
@@ -57,7 +59,7 @@ const updateQuiz = async (quizId, updateData, token) => {
     },
   };
 
-  const response = await axios.put(API_URL + quizId, updateData, config);
+  const response = await axios.put(API_URL + '/' + quizId, updateData, config);
 
   return response.data;
 };
