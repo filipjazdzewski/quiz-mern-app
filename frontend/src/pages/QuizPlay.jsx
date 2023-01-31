@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getQuiz } from '../features/quiz/quizSlice';
+import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import Spinner from '../layout/Spinner';
 
 function QuizPlay() {
@@ -15,24 +16,24 @@ function QuizPlay() {
   const dispatch = useDispatch();
   const { id } = useParams();
 
+  const handleClickPrev = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex((prev) => prev - 1);
+    }
+  };
+
   const handleClickNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
     }
-    if (currentQuestionIndex === questions.length - 1) {
-      setIsQuizFinished(true);
-    }
   };
 
-  // function shuffleQuestions(array) {
+  // function shuffleArray(array) {
   //   for (let i = array.length - 1; i > 0; i--) {
-  //     let j = Math.floor(Math.random() * (i + 1));
+  //     const j = Math.floor(Math.random() * (i + 1));
   //     [array[i], array[j]] = [array[j], array[i]];
   //   }
-  //   return array;
   // }
-
-  // console.log(questions[currentQuestion]);
 
   const fetchGetQuiz = () => {
     dispatch(getQuiz(id))
@@ -77,12 +78,6 @@ function QuizPlay() {
               <div className='py-4'>
                 {questions[currentQuestionIndex].questionTitle}
               </div>
-              <button
-                onClick={handleClickNext}
-                className='btn btn-primary btn-sm'
-              >
-                Next
-              </button>
             </div>
             <div className='w-1/2'>
               <div className='grid grid-cols-1 gap-4'>
@@ -99,6 +94,15 @@ function QuizPlay() {
               </div>
             </div>
           </div>
+        </div>
+
+        <div className='flex justify-between'>
+          <button onClick={handleClickPrev} className='btn btn-sm'>
+            <FaAngleLeft /> Prev
+          </button>
+          <button onClick={handleClickNext} className='btn btn-sm'>
+            <FaAngleRight /> Next
+          </button>
         </div>
       </div>
     );
