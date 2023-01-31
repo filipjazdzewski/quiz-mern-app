@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import {
+  FaUser,
   FaSignInAlt,
   FaUserPlus,
   FaSignOutAlt,
@@ -65,9 +66,34 @@ function Navbar() {
                   </Link>
                 </li>
                 <li>
-                  <button onClick={onLogout} className='btn btn-primary btn-sm'>
-                    <FaSignOutAlt /> Logout
-                  </button>
+                  <div className='dropdown dropdown-bottom dropdown-end'>
+                    <label
+                      tabIndex={0}
+                      className='btn btn-ghost btn-circle btn-sm'
+                    >
+                      <RxHamburgerMenu className='h-6 w-6' />
+                    </label>
+                    <ul
+                      tabIndex={0}
+                      className='dropdown-content menu shadow-lg bg-base-200 bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-box w-52 mt-4'
+                    >
+                      <li className='hover-bordered'>
+                        <Link to='/register'>
+                          <FaUser /> Account
+                        </Link>
+                      </li>
+                      <li className='hover-bordered'>
+                        <Link to='/quiz/creator'>
+                          <FaPlusCircle /> Create a quiz
+                        </Link>
+                      </li>
+                      <li className='hover-bordered'>
+                        <button onClick={onLogout}>
+                          <FaSignOutAlt /> Logout
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
                 </li>
               </>
             ) : (

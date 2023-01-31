@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import { FaSave } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getQuiz } from '../features/quiz/quizSlice';
 import { createQuestion } from '../features/question/questionSlice';
@@ -19,16 +19,20 @@ const CreateQuestionSchema = Yup.object().shape({
 });
 
 function QuizCreatorEdit() {
+  const { user } = useSelector((state) => state.auth);
   const { quiz, isLoading } = useSelector((state) => state.quiz);
   const [questions, setQuestions] = useState([]);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { id } = useParams();
 
   const fetchGetQuiz = () => {
     dispatch(getQuiz(id))
       .unwrap()
-      .then((quiz) => setQuestions(quiz.questions))
+      .then((quiz) =>
+        quiz.user !== user._id ? navigate('/') : setQuestions(quiz.questions)
+      )
       .catch(toast.error);
   };
 
