@@ -22,7 +22,7 @@ function Navbar() {
 
   return (
     // z-50 makes the navbar on top of every other component fixing the bugs where it was under
-    <nav className='navbar mb-12 shadow-lg bg-base-200 bg-opacity-40 backdrop-filter backdrop-blur-lg border-b border-base-300 sticky top-0 z-50 text-neutral-content'>
+    <nav className='navbar mb-8 shadow-lg bg-base-200 bg-opacity-40 backdrop-filter backdrop-blur-lg border-b border-base-300 sticky top-0 z-50 text-neutral-content'>
       <div className='navbar-start'>
         <Link to='/' className='text-2xl sm:text-4xl font-bold'>
           QuizApp
@@ -34,7 +34,7 @@ function Navbar() {
             {user ? (
               <>
                 <li>
-                  <Link to='/quiz/creator' className='btn btn-ghost btn-sm'>
+                  <Link to='/quiz/creator' className='btn btn-secondary btn-sm'>
                     <FaPlusCircle /> Create a quiz
                   </Link>
                 </li>
@@ -51,13 +51,8 @@ function Navbar() {
                       className='dropdown-content menu shadow-lg bg-base-200 bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-box w-52 mt-4'
                     >
                       <li className='hover-bordered'>
-                        <Link to='/register'>
+                        <Link to='/profile'>
                           <FaUser /> Account
-                        </Link>
-                      </li>
-                      <li className='hover-bordered'>
-                        <Link to='/quiz/creator'>
-                          <FaPlusCircle /> Create a quiz
                         </Link>
                       </li>
                       <li className='hover-bordered'>
@@ -95,6 +90,11 @@ function Navbar() {
           >
             {user ? (
               <>
+                <li className='hover-bordered'>
+                  <Link to='/profile'>
+                    <FaUser /> Account
+                  </Link>
+                </li>
                 <li className='hover-bordered'>
                   <Link to='/quiz/creator'>
                     <FaPlusCircle /> Create a quiz
