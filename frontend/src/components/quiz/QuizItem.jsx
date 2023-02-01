@@ -23,10 +23,10 @@ function QuizItem({ quiz }) {
   const quizTitle =
     quiz.title.length > 25 ? `${quiz.title.slice(0, 23)}...` : quiz.title;
   const howManyQuestions = quiz.questions.length;
-  const howManyTimesPlayed =
-    quiz.ranking.length > 999
-      ? `${quiz.ranking.length / 1000}k`
-      : quiz.ranking.length;
+  const howManyLikes =
+    quiz.likes.length > 999
+      ? `${quiz.likes.length / 1000}k`
+      : quiz.likes.length;
   // **** QUIZ VARIABLES ****
 
   const handleDelete = () => {
@@ -53,19 +53,11 @@ function QuizItem({ quiz }) {
   return (
     <>
       <div className='card bg-base-200 shadow-xl'>
-        <figure>
-          <img
-            src='https://placeimg.com/520/220/tech/sepia'
-            alt='quiz'
-            className='w-full'
-          />
-        </figure>
+        <figure className='bg-primary h-40'>Image</figure>
         <div className='card-body p-6 pt-2'>
           <div className='flex justify-between'>
             <div className='badge badge-secondary'>{howManyQuestions} Qs</div>
-            <div className='badge badge-secondary'>
-              {howManyTimesPlayed} plays
-            </div>
+            <div className='badge badge-secondary'>{howManyLikes} likes</div>
           </div>
           <h2 className='card-title'>{quizTitle}</h2>
           <div className='card-actions justify-end'>
