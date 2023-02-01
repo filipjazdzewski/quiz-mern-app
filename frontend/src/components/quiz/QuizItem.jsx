@@ -1,9 +1,12 @@
 import { toast } from 'react-toastify';
-import { FaEdit } from 'react-icons/fa';
-import { RiDeleteBin5Line } from 'react-icons/ri';
+import { FaEdit, FaTrashAlt, FaThumbsUp } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteQuiz } from '../../features/quiz/quizSlice';
+import {
+  deleteQuiz,
+  likeQuiz,
+  unlikeQuiz,
+} from '../../features/quiz/quizSlice';
 
 function QuizItem({ quiz }) {
   const dispatch = useDispatch();
@@ -11,6 +14,9 @@ function QuizItem({ quiz }) {
   const { user } = useSelector((state) => state.auth);
   // Check if the logged in user is the author of the quiz
   const isAuthor = quiz.user === user?._id;
+
+  // Check if the quiz is liked
+  const isLiked = user && quiz.likes.includes(user._id);
 
   // **** QUIZ VARIABLES ****
   const quizId = quiz._id;
@@ -27,6 +33,20 @@ function QuizItem({ quiz }) {
     dispatch(deleteQuiz(quizId))
       .unwrap()
       .then(toast.success(`Successfully deleted - ${quizTitle}`))
+      .catch(toast.error);
+  };
+
+  const handleLike = () => {
+    dispatch(likeQuiz(quizId))
+      .unwrap()
+      .then(toast.success(`Liked ${quizTitle}`))
+      .catch(toast.error);
+  };
+
+  const handleUnlike = () => {
+    dispatch(unlikeQuiz(quizId))
+      .unwrap()
+      .then(toast.success(`Unliked ${quizTitle}`))
       .catch(toast.error);
   };
 
@@ -61,9 +81,22 @@ function QuizItem({ quiz }) {
                   onClick={handleDelete}
                   className='btn btn-primary btn-sm'
                 >
-                  <RiDeleteBin5Line />
+                  <FaTrashAlt />
                 </button>
               </>
+            )}
+            {!isAuthor && user && (
+              <div>
+                {isLiked ? (
+                  <button onClick={handleUnlike} className='btn btn-sm'>
+                    <FaThumbsUp className='text-primary' />
+                  </button>
+                ) : (
+                  <button onClick={handleLike} className='btn btn-sm'>
+                    <FaThumbsUp />
+                  </button>
+                )}
+              </div>
             )}
             <Link
               to={`/quiz/play/${quizId}`}
