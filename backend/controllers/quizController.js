@@ -11,7 +11,7 @@ const getQuizzes = asyncHandler(async (req, res) => {
 
   if (search) {
     const quizzes = await Quiz.aggregate([
-      { $project: { _id: 1, title: 1, questions: 1, ranking: 1 } },
+      { $project: { _id: 1, title: 1, questions: 1, ranking: 1, likes: 1 } },
       { $match: { title: { $regex: new RegExp(search), $options: 'i' } } },
       { $sort: { updatedAt: -1 } },
     ]);
