@@ -62,10 +62,36 @@ export const deleteQuiz = createAsyncThunk(
 // Update a quiz
 export const updateQuiz = createAsyncThunk(
   'quizzes/update',
+  async ({ quizId, updateData }, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await quizService.updateQuiz(quizId, updateData, token);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(extractErrorMessage(error));
+    }
+  }
+);
+
+// Like a quiz
+export const likeQuiz = createAsyncThunk(
+  'quizzes/like',
   async (quizId, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
-      return await quizService.updateQuiz(quizId, token);
+      return await quizService.likeQuiz(quizId, token);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(extractErrorMessage(error));
+    }
+  }
+);
+
+// Unlike a quiz
+export const unlikeQuiz = createAsyncThunk(
+  'quizzes/unlike',
+  async (quizId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await quizService.unlikeQuiz(quizId, token);
     } catch (error) {
       return thunkAPI.rejectWithValue(extractErrorMessage(error));
     }
@@ -79,6 +105,7 @@ export const quizSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getQuizzes.pending, (state) => {
+        state.quizzes = [];
         state.isLoading = true;
       })
       .addCase(getQuizzes.fulfilled, (state, action) => {
@@ -89,6 +116,7 @@ export const quizSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(getQuiz.pending, (state) => {
+        state.quiz = {};
         state.isLoading = true;
       })
       .addCase(getQuiz.fulfilled, (state, action) => {
@@ -124,6 +152,18 @@ export const quizSlice = createSlice({
       })
       .addCase(updateQuiz.rejected, (state) => {
         state.isLoading = false;
+      })
+      .addCase(likeQuiz.fulfilled, (state, action) => {
+        state.quiz = action.payload;
+        state.quizzes = state.quizzes.map((quiz) =>
+          quiz._id === state.quiz._id ? state.quiz : quiz
+        );
+      })
+      .addCase(unlikeQuiz.fulfilled, (state, action) => {
+        state.quiz = action.payload;
+        state.quizzes = state.quizzes.map((quiz) =>
+          quiz._id === state.quiz._id ? state.quiz : quiz
+        );
       });
   },
 });
