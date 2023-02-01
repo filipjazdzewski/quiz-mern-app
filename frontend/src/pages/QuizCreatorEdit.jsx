@@ -1,16 +1,45 @@
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import Modal from 'react-modal';
 import { toast } from 'react-toastify';
-import { FaSave } from 'react-icons/fa';
+import { FaSave, FaEdit, FaTrashAlt } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getQuiz } from '../features/quiz/quizSlice';
-import { createQuestion } from '../features/question/questionSlice';
+import { getQuiz, deleteQuiz, updateQuiz } from '../features/quiz/quizSlice';
+import {
+  createQuestion,
+  deleteQuestion,
+  getQuestions,
+} from '../features/question/questionSlice';
 import Spinner from '../layout/Spinner';
 import QuestionList from '../components/questions/QuestionList';
 import moment from 'moment';
 
+// Modal style
+const customStyles = {
+  overlay: {
+    zIndex: 100,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  },
+  content: {
+    width: '400px',
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    position: 'relative',
+    backgroundColor: '#20222c',
+    border: 'none',
+    borderRadius: '10px',
+  },
+};
+
+Modal.setAppElement('#root');
+
+// Question validation
 const CreateQuestionSchema = Yup.object().shape({
   questionTitle: Yup.string()
     .min(3, 'Question is too Short')
@@ -21,7 +50,13 @@ const CreateQuestionSchema = Yup.object().shape({
 function QuizCreatorEdit() {
   const { user } = useSelector((state) => state.auth);
   const { quiz, isLoading } = useSelector((state) => state.quiz);
-  const [questions, setQuestions] = useState([]);
+  const { questions } = useSelector((state) => state.question);
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [titleText, setTitleText] = useState('');
+  const [options, setOptions] = useState([]);
+  const [correctOption, setCorrectOption] = useState(0);
+  const [correctOptions, setCorrectOptions] = useState([]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,8 +66,45 @@ function QuizCreatorEdit() {
     dispatch(getQuiz(id))
       .unwrap()
       .then((quiz) =>
-        quiz.user !== user._id ? navigate('/') : setQuestions(quiz.questions)
+        quiz.user !== user._id
+          ? navigate('/')
+          : dispatch(getQuestions(quiz.questions))
       )
+      .catch(toast.error);
+  };
+
+  const handleChangeQuizTitle = () => {
+    const updateData = { title: titleText };
+    dispatch(updateQuiz({ quizId: quiz._id, updateData }))
+      .unwrap()
+      .then(() => {
+        setTitleText('');
+        closeModal();
+        fetchGetQuiz();
+        toast.success(`Successfully edited the quiz`);
+      })
+      .catch(toast.error);
+  };
+
+  // Delete Question
+  const handleDeleteQuestion = (questionId) => {
+    dispatch(deleteQuestion({ questionId: questionId, quizId: quiz._id }))
+      .unwrap()
+      .then(() => {
+        fetchGetQuiz();
+        toast.success(`Successfully deleted the question`);
+      })
+      .catch(toast.error);
+  };
+
+  // Delete Quiz
+  const handleDeleteQuiz = () => {
+    dispatch(deleteQuiz(quiz._id))
+      .unwrap()
+      .then(() => {
+        navigate('/');
+        toast.success(`Successfully deleted - ${quiz.title}`);
+      })
       .catch(toast.error);
   };
 
@@ -41,22 +113,6 @@ function QuizCreatorEdit() {
     setCorrectOption(0);
     setCorrectOptions([]);
   };
-
-  const handleDeleteQuestion = (questionId) => {
-    console.log(questionId);
-    dispatch(deleteQuestion(questionId))
-      .unwrap()
-      .then(() => {
-        fetchGetQuiz();
-        toast.success('Successfully deleted the question');
-      })
-      .catch(toast.error);
-  };
-
-  const [options, setOptions] = useState([]);
-  const [correctOption, setCorrectOption] = useState(0);
-
-  const [correctOptions, setCorrectOptions] = useState([]);
 
   const updateCheckStatus = (idx) => {
     const newCorrects = correctOptions.map((option, index) =>
@@ -80,12 +136,19 @@ function QuizCreatorEdit() {
     const newOptions = [...options];
     newOptions[idx].optionTitle = e.target.value;
     setOptions(newOptions);
-    console.log(correctOptions);
   };
 
   useEffect(() => {
     fetchGetQuiz();
   }, []);
+
+  // Open/close modal
+  const openModal = () => setModalIsOpen(true);
+  const closeModal = () => setModalIsOpen(false);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className='max-w-lg md:max-w-screen-md mx-auto'>
@@ -98,6 +161,57 @@ function QuizCreatorEdit() {
             <p className='card-describtion'>
               Last updated: {moment(quiz.updatedAt).calendar()}
             </p>
+            <div className='btn-group'>
+              <button
+                onClick={openModal}
+                className='btn btn-sm tooltip tooltip-left tooltip-info'
+                data-tip='Edit the title'
+              >
+                <FaEdit />
+              </button>
+
+              <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                contentLabel='Edit Quiz Title'
+                style={customStyles}
+              >
+                <div className='flex flex-col gap-3'>
+                  <h1 className='font-bold text-xl'>Edit quiz title</h1>
+                  <button
+                    onClick={closeModal}
+                    className='btn btn-sm btn-circle absolute right-2 top-2'
+                  >
+                    ✕
+                  </button>
+                  <form onSubmit={handleChangeQuizTitle}>
+                    <div className='form-control mb-3'>
+                      <input
+                        name='titleText'
+                        type='text'
+                        placeholder='Enter new title'
+                        className='input input-bordered'
+                        value={titleText}
+                        onChange={(e) => setTitleText(e.target.value)}
+                      />
+                    </div>
+                    <div className='form-control'>
+                      <button type='submit' className='btn btn-sm btn-primary'>
+                        Edit
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </Modal>
+
+              <button
+                onClick={handleDeleteQuiz}
+                className='btn btn-sm tooltip tooltip-right tooltip-error'
+                data-tip='Delete the quiz'
+              >
+                <FaTrashAlt />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -175,15 +289,17 @@ function QuizCreatorEdit() {
                     </div>
                   </div>
                   <div className='flex flex-col items-center gap-4'>
-                    {values.typeOfQuestion && (
-                      <button
-                        type='button'
-                        className='btn btn-primary'
-                        onClick={handleAddOption}
-                      >
-                        Add New Option
-                      </button>
-                    )}
+                    {values.typeOfQuestion &&
+                      values.typeOfQuestion !== 'TrueOrFalse' && (
+                        <button
+                          type='button'
+                          className='btn btn-primary'
+                          onClick={handleAddOption}
+                        >
+                          Add New Option
+                        </button>
+                      )}
+
                     {values.typeOfQuestion === 'SingleChoice' && (
                       <>
                         {options.length > 0 && (
@@ -254,6 +370,7 @@ function QuizCreatorEdit() {
                         ))}
                       </>
                     )}
+
                     {values.typeOfQuestion === 'TrueOrFalse' && <></>}
                     <div className='form-control mt-6'>
                       <button type='submit' className='btn btn-primary'>
@@ -267,13 +384,13 @@ function QuizCreatorEdit() {
           )}
         </Formik>
       </div>
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <div>
-          <QuestionList questions={questions} quizId={quiz._id} />
-        </div>
-      )}
+
+      <div>
+        <QuestionList
+          questions={questions}
+          handleDeleteQuestion={handleDeleteQuestion}
+        />
+      </div>
     </div>
   );
 }

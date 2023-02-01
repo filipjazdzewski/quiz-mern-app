@@ -22,12 +22,41 @@ const login = async (userData) => {
   return response.data;
 };
 
+const updateUser = async (userId, updateData, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.put(API_URL + '/' + userId, updateData, config);
+
+  if (response.data) {
+    localStorage.setItem('user', JSON.stringify(response.data));
+  }
+  return response.data;
+};
+
+const deleteUser = async (userId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.delete(API_URL + '/' + userId, config);
+
+  return response.data;
+};
+
 const logout = () => localStorage.removeItem('user');
 
 const authService = {
   register,
   login,
   logout,
+  updateUser,
+  deleteUser,
 };
 
 export default authService;

@@ -11,9 +11,12 @@ const getQuizzes = asyncHandler(async (req, res) => {
 
   if (search) {
     const quizzes = await Quiz.aggregate([
+      { $project: { _id: 1, title: 1, questions: 1, ranking: 1, likes: 1 } },
       { $match: { title: { $regex: new RegExp(search), $options: 'i' } } },
       { $sort: { updatedAt: -1 } },
-    ]).populate('questions');
+    ]);
+
+    await Question.populate(quizzes, { path: 'questions' });
 
     res.status(200).json(quizzes);
   }
@@ -35,11 +38,6 @@ const getQuiz = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error('Quiz not found');
   }
-
-  // if (quiz.user.toString() !== req.user.id) {
-  //   res.status(401);
-  //   throw new Error('Not Authorized');
-  // }
 
   res.status(200).json(quiz);
 });
@@ -111,10 +109,62 @@ const updateQuiz = asyncHandler(async (req, res) => {
   res.status(200).json(updatedQuiz);
 });
 
+// @desc    Like quiz
+// @route   PUT /api/quizzes/like
+// @access  Private
+const likeQuiz = asyncHandler(async (req, res) => {
+  const quiz = await Quiz.findById(req.params.id);
+
+  if (!quiz) {
+    res.status(404);
+    throw new Error('Quiz not found');
+  }
+
+  if (quiz.likes.includes(req.user._id)) {
+    res.status(404);
+    throw new Error('This quiz is already liked by you');
+  }
+
+  await Quiz.findByIdAndUpdate(req.params.id, {
+    $push: { likes: req.user._id },
+  });
+
+  const updatedQuiz = await Quiz.findById(req.params.id);
+
+  res.status(200).json(updatedQuiz);
+});
+
+// @desc    Unlike quiz
+// @route   PUT /api/quizzes/unlike
+// @access  Private
+const unlikeQuiz = asyncHandler(async (req, res) => {
+  const quiz = await Quiz.findById(req.params.id);
+
+  if (!quiz) {
+    res.status(404);
+    throw new Error('Quiz not found');
+  }
+
+  if (!quiz.likes.includes(req.user._id)) {
+    res.status(404);
+    throw new Error('You cannot unlike a quiz u did not like');
+  }
+
+  await Quiz.findByIdAndUpdate(req.params.id, {
+    $pull: { likes: req.user._id },
+  });
+
+  const updatedQuiz = await Quiz.findById(req.params.id);
+
+  res.status(200).json(updatedQuiz);
+});
+
 module.exports = {
   getQuizzes,
   getQuiz,
   createQuiz,
   deleteQuiz,
   updateQuiz,
+  likeQuiz,
+  unlikeQuiz,
 };

@@ -23,7 +23,7 @@ export const createQuestion = createAsyncThunk(
 // Delete a question
 export const deleteQuestion = createAsyncThunk(
   'questions/delete',
-  async (questionId, quizId, thunkAPI) => {
+  async ({ questionId, quizId }, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
       return await questionService.deleteQuestion(questionId, quizId, token);
@@ -36,8 +36,21 @@ export const deleteQuestion = createAsyncThunk(
 export const questionSlice = createSlice({
   name: 'question',
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {},
+  reducers: {
+    getQuestions: (state, action) => {
+      state.questions = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(deleteQuestion.fulfilled, (state, action) => {
+      const deletedQuestion = action.payload;
+      state.questions = state.questions.filter(
+        (question) => question._id !== deletedQuestion._id
+      );
+    });
+  },
 });
+
+export const { getQuestions } = questionSlice.actions;
 
 export default questionSlice.reducer;

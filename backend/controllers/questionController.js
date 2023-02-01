@@ -101,7 +101,7 @@ const deleteQuestion = asyncHandler(async (req, res) => {
   );
   await question.remove();
 
-  res.status(200).json({ success: true });
+  res.status(200).json(question);
 });
 
 // @desc    Update question
