@@ -64,6 +64,48 @@ const updateQuiz = async (quizId, updateData, token) => {
   return response.data;
 };
 
-const quizService = { getQuizzes, getQuiz, createQuiz, deleteQuiz, updateQuiz };
+// Like quiz by ID
+const likeQuiz = async (quizId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.put(
+    API_URL + '/like/' + quizId,
+    { quizId },
+    config
+  );
+
+  return response.data;
+};
+
+// Unlike quiz by ID
+const unlikeQuiz = async (quizId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.put(
+    API_URL + '/unlike/' + quizId,
+    { quizId },
+    config
+  );
+
+  return response.data;
+};
+
+const quizService = {
+  getQuizzes,
+  getQuiz,
+  createQuiz,
+  deleteQuiz,
+  updateQuiz,
+  likeQuiz,
+  unlikeQuiz,
+};
 
 export default quizService;
