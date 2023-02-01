@@ -24,6 +24,12 @@ const quizSchema = mongoose.Schema(
         ref: 'Game',
       },
     ],
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   {
     timestamps: true,
