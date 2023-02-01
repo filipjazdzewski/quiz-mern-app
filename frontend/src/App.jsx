@@ -13,6 +13,7 @@ import Footer from './layout/Footer';
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import Profile from './pages/Profile';
 import QuizCreator from './pages/QuizCreator';
 import QuizCreatorEdit from './pages/QuizCreatorEdit';
 import QuizPlay from './pages/QuizPlay';
@@ -36,6 +37,14 @@ function App() {
               <Route
                 path='/login'
                 element={user ? <Navigate to='/' /> : <Login />}
+              />
+              <Route
+                path='/profile'
+                element={
+                  <PrivateRoute>
+                    <Profile />
+                  </PrivateRoute>
+                }
               />
               <Route
                 path='/quiz/play/:id'
@@ -67,7 +76,7 @@ function App() {
           <Footer />
         </div>
       </Router>
-      <ToastContainer theme='dark' autoClose={3500} />
+      <ToastContainer theme='dark' autoClose={1500} />
     </>
   );
 }
