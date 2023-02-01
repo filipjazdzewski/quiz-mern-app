@@ -29,10 +29,32 @@ export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
   }
 });
 
+export const updateUser = createAsyncThunk(
+  'auth/updateUser',
+  async ({ userId, updateData }, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await authService.updateUser(userId, updateData, token);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(extractErrorMessage(error));
+    }
+  }
+);
+
+export const deleteUser = createAsyncThunk(
+  'auth/deleteUser',
+  async (userId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await authService.deleteUser(userId, token);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(extractErrorMessage(error));
+    }
+  }
+);
+
 export const logout = createAction('auth/logout', () => {
   authService.logout();
-  // return an empty object as our payload as we don't need a payload but the
-  // prepare function requires a payload return
   return {};
 });
 
@@ -64,6 +86,16 @@ export const authSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(login.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(updateUser.pending, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(updateUser.rejected, (state) => {
         state.isLoading = false;
       });
   },
