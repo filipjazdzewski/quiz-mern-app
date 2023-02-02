@@ -15,6 +15,9 @@ import {
 import Spinner from '../layout/Spinner';
 import QuestionList from '../components/questions/QuestionList';
 import moment from 'moment';
+import io from 'socket.io-client';
+
+const socket = io.connect(import.meta.env.VITE_API);
 
 // Modal style
 const customStyles = {
@@ -91,6 +94,7 @@ function QuizCreatorEdit() {
     dispatch(deleteQuestion({ questionId: questionId, quizId: quiz._id }))
       .unwrap()
       .then(() => {
+        socket.emit('send_questions_length', quiz.questions.length - 1);
         fetchGetQuiz();
         toast.success(`Successfully deleted the question`);
       })
@@ -244,6 +248,7 @@ function QuizCreatorEdit() {
             dispatch(createQuestion(questionData))
               .unwrap()
               .then(() => {
+                socket.emit('send_questions_length', quiz.questions.length + 1);
                 fetchGetQuiz();
                 resetForm();
                 resetOptionStates();
