@@ -1,5 +1,6 @@
 import { toast } from 'react-toastify';
 import { FaEdit, FaTrashAlt, FaThumbsUp } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -7,6 +8,9 @@ import {
   likeQuiz,
   unlikeQuiz,
 } from '../../features/quiz/quizSlice';
+import io from 'socket.io-client';
+
+const socket = io.connect(import.meta.env.VITE_API);
 
 function QuizItem({ quiz }) {
   const dispatch = useDispatch();
@@ -22,13 +26,12 @@ function QuizItem({ quiz }) {
   const quizId = quiz._id;
   const quizTitle =
     quiz.title.length > 25 ? `${quiz.title.slice(0, 23)}...` : quiz.title;
-  const howManyQuestions = quiz.questions.length;
-  const howManyLikes =
-    quiz.likes.length > 999
-      ? `${quiz.likes.length / 1000}k`
-      : quiz.likes.length;
+  const [howManyQuestions, setHowManyQuestions] = useState(
+    quiz.questions.length
+  );
+  const [howManyLikes, setHowManyLikes] = useState(quiz.likes.length);
   // **** QUIZ VARIABLES ****
-
+  console.log(quiz);
   const handleDelete = () => {
     dispatch(deleteQuiz(quizId))
       .unwrap()
@@ -39,16 +42,33 @@ function QuizItem({ quiz }) {
   const handleLike = () => {
     dispatch(likeQuiz(quizId))
       .unwrap()
-      .then(toast.success(`Liked ${quizTitle}`))
+      .then(() => {
+        setHowManyLikes((prev) => prev + 1);
+        socket.emit('click_like_button', howManyLikes + 1);
+        toast.success(`Liked ${quizTitle}`);
+      })
       .catch(toast.error);
   };
 
   const handleUnlike = () => {
     dispatch(unlikeQuiz(quizId))
       .unwrap()
-      .then(toast.success(`Unliked ${quizTitle}`))
+      .then(() => {
+        setHowManyLikes((prev) => prev - 1);
+        socket.emit('click_like_button', howManyLikes - 1);
+        toast.success(`Unliked ${quizTitle}`);
+      })
       .catch(toast.error);
   };
+
+  useEffect(() => {
+    socket.on('receive_like_data', (data) => {
+      setHowManyLikes(data);
+    });
+    socket.on('receive_questions_length', (data) => {
+      setHowManyQuestions(data);
+    });
+  }, [socket]);
 
   return (
     <>
