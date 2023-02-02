@@ -300,78 +300,74 @@ function QuizCreatorEdit() {
                         </button>
                       )}
 
-                    {values.typeOfQuestion === 'SingleChoice' && (
-                      <>
-                        {options.length > 0 && (
-                          <div className='text-sm'>(Mark the correct one)</div>
-                        )}
-                        {options.map((_, idx) => (
-                          <div
-                            className='flex flex-row items-center gap-2'
-                            key={idx}
-                          >
-                            <div className='form-control'>
-                              <input
-                                className='radio radio-primary'
-                                type='radio'
-                                name='isCorrect'
-                                value={idx}
-                                onChange={() => setCorrectOption(idx)}
-                              />
+                    <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+                      {values.typeOfQuestion === 'SingleChoice' && (
+                        <>
+                          {options.map((_, idx) => (
+                            <div
+                              className='flex flex-row items-center gap-2'
+                              key={idx}
+                            >
+                              <div className='form-control'>
+                                <input
+                                  className='radio radio-primary'
+                                  type='radio'
+                                  name='isCorrect'
+                                  value={idx}
+                                  onChange={() => setCorrectOption(idx)}
+                                />
+                              </div>
+                              <div className='form-control'>
+                                <input
+                                  className='input input-bordered'
+                                  placeholder='Enter an option'
+                                  type='text'
+                                  name='isCorrect'
+                                  value={options[idx].optionTitle}
+                                  onChange={(e) =>
+                                    handleOptionTitleChange(e, idx)
+                                  }
+                                />
+                              </div>
                             </div>
-                            <div className='form-control'>
-                              <input
-                                className='input input-bordered'
-                                placeholder='Enter an option'
-                                type='text'
-                                name='isCorrect'
-                                value={options[idx].optionTitle}
-                                onChange={(e) =>
-                                  handleOptionTitleChange(e, idx)
-                                }
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </>
-                    )}
+                          ))}
+                        </>
+                      )}
 
-                    {values.typeOfQuestion === 'MultipleChoices' && (
-                      <>
-                        {options.length > 0 && (
-                          <div className='text-sm'>(Mark the correct ones)</div>
-                        )}
-                        {options.map((option, idx) => (
-                          <div
-                            className='flex flex-row items-center gap-2'
-                            key={idx}
-                          >
-                            <div className='form-control'>
-                              <input
-                                className='checkbox checkbox-primary'
-                                type='checkbox'
-                                onChange={() => updateCheckStatus(idx)}
-                                index={idx}
-                              />
+                      {values.typeOfQuestion === 'MultipleChoices' && (
+                        <>
+                          {options.map((option, idx) => (
+                            <div
+                              className='flex flex-row items-center gap-2'
+                              key={idx}
+                            >
+                              <div className='form-control'>
+                                <input
+                                  className='checkbox checkbox-primary'
+                                  type='checkbox'
+                                  onChange={() => updateCheckStatus(idx)}
+                                  index={idx}
+                                />
+                              </div>
+                              <div className='form-control'>
+                                <input
+                                  className='input input-bordered'
+                                  placeholder='Enter an option'
+                                  type='text'
+                                  name='isCorrect'
+                                  value={options[idx].optionTitle}
+                                  onChange={(e) =>
+                                    handleOptionTitleChange(e, idx)
+                                  }
+                                />
+                              </div>
                             </div>
-                            <div className='form-control'>
-                              <input
-                                className='input input-bordered'
-                                placeholder='Enter an option'
-                                type='text'
-                                name='isCorrect'
-                                value={options[idx].optionTitle}
-                                onChange={(e) =>
-                                  handleOptionTitleChange(e, idx)
-                                }
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </>
-                    )}
+                          ))}
+                        </>
+                      )}
 
-                    {values.typeOfQuestion === 'TrueOrFalse' && <></>}
+                      {values.typeOfQuestion === 'TrueOrFalse' && <></>}
+                    </div>
                     <div className='form-control mt-6'>
                       <button type='submit' className='btn btn-primary'>
                         <FaSave /> Save
