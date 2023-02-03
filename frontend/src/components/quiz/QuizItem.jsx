@@ -31,7 +31,6 @@ function QuizItem({ quiz }) {
   );
   const [howManyLikes, setHowManyLikes] = useState(quiz.likes.length);
   // **** QUIZ VARIABLES ****
-  console.log(quiz);
   const handleDelete = () => {
     dispatch(deleteQuiz(quizId))
       .unwrap()
@@ -45,7 +44,6 @@ function QuizItem({ quiz }) {
       .then(() => {
         setHowManyLikes((prev) => prev + 1);
         socket.emit('click_like_button', howManyLikes + 1);
-        toast.success(`Liked ${quizTitle}`);
       })
       .catch(toast.error);
   };
@@ -56,7 +54,6 @@ function QuizItem({ quiz }) {
       .then(() => {
         setHowManyLikes((prev) => prev - 1);
         socket.emit('click_like_button', howManyLikes - 1);
-        toast.success(`Unliked ${quizTitle}`);
       })
       .catch(toast.error);
   };
