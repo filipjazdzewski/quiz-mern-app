@@ -22,19 +22,22 @@ function Navbar() {
 
   return (
     // z-50 makes the navbar on top of every other component fixing the bugs where it was under
-    <nav className='navbar mb-8 shadow-lg bg-base-200 bg-opacity-40 backdrop-filter backdrop-blur-lg border-b border-base-300 sticky top-0 z-50 text-neutral-content'>
+    <nav className='navbar mb-8 md:px-4 shadow-lg bg-base-300 bg-opacity-40 backdrop-filter backdrop-blur-lg border-b border-opacity-20 border-neutral sticky top-0 z-50 text-neutral-content'>
       <div className='navbar-start'>
-        <Link to='/' className='text-2xl sm:text-4xl font-bold'>
+        <Link
+          to='/'
+          className='font-extrabold text-transparent text-4xl bg-clip-text bg-gradient-to-r from-secondary to-primary'
+        >
           QuizApp
         </Link>
       </div>
       <div className='navbar-end'>
-        <div className='hidden md:block'>
-          <ul className='flex justify-end px-2 mx-2 gap-2'>
+        <div className='hidden sm:block'>
+          <ul className='flex justify-end mx-2 gap-2'>
             {user ? (
               <>
                 <li>
-                  <Link to='/quiz/creator' className='btn btn-secondary btn-sm'>
+                  <Link to='/quiz/creator' className='btn btn-primary btn-sm'>
                     <FaPlusCircle /> Create a quiz
                   </Link>
                 </li>
@@ -80,7 +83,7 @@ function Navbar() {
             )}
           </ul>
         </div>
-        <div className='dropdown dropdown-bottom dropdown-end md:hidden'>
+        <div className='dropdown dropdown-bottom dropdown-end sm:hidden'>
           <label tabIndex={0} className='btn btn-ghost btn-circle btn-sm'>
             <RxHamburgerMenu className='h-6 w-6' />
           </label>

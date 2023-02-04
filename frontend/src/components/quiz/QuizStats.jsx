@@ -19,7 +19,7 @@ function QuizStats() {
         <div className='stat-figure text-secondary'>
           <MdOutlineQuiz className='inline-block w-8 h-8 stroke-current' />
         </div>
-        <div className='stat-title'>Quizes</div>
+        <div className='stat-title'>Quizzes</div>
         <div className='stat-value'>{numberOfQuizes}</div>
         <div className='stat-desc'>Overall number</div>
       </div>

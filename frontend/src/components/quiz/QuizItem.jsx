@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { FaEdit, FaTrashAlt, FaThumbsUp } from 'react-icons/fa';
+import { FaEdit, FaTrashAlt, FaThumbsUp, FaQuora } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -69,8 +69,10 @@ function QuizItem({ quiz }) {
 
   return (
     <>
-      <div className='card bg-base-200 shadow-xl'>
-        <figure className='bg-primary h-40'>Image</figure>
+      <div className='card bg-base-200 shadow-lg hover:shadow-2xl'>
+        <figure className='bg-gradient-to-r from-secondary to-primary h-36 text-8xl font-bold'>
+          <FaQuora />
+        </figure>
         <div className='card-body p-6 pt-2'>
           <div className='flex justify-between'>
             <div className='badge badge-secondary'>{howManyQuestions} Qs</div>
