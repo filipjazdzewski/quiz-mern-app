@@ -24,7 +24,7 @@ function App() {
   return (
     <>
       <Router>
-        <div className='flex flex-col justify-between h-screen'>
+        <div className='flex flex-col justify-between min-h-screen'>
           <Navbar />
 
           <main className='container sm:max-w-screen-lg mx-auto px-3 pb-12'>
