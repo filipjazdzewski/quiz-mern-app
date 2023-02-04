@@ -77,7 +77,7 @@ function Profile() {
                     <button
                       type='button'
                       onClick={handleDeleteAccount}
-                      className='btn btn-error'
+                      className='btn btn-outline btn-error'
                     >
                       Delete Account
                     </button>
