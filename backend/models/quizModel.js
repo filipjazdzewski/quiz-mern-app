@@ -4,7 +4,6 @@ const quizSchema = mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
       ref: 'User',
     },
     title: {
@@ -18,10 +17,41 @@ const quizSchema = mongoose.Schema(
         ref: 'Question',
       },
     ],
+    negativePoints: {
+      type: Boolean,
+      default: false,
+    },
+    timeLimit: {
+      type: Number,
+      enum: [0, 30, 45, 60],
+      default: 0,
+    },
+    randomQuestionOrder: {
+      type: Boolean,
+      default: false,
+    },
+    randomOptionOrder: {
+      type: Boolean,
+      default: false,
+    },
+    noBackOption: {
+      type: Boolean,
+      default: false,
+    },
     ranking: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Game',
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+        },
+        score: {
+          type: Number,
+          required: true,
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
       },
     ],
     likes: [
