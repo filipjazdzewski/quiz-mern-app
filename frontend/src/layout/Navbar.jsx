@@ -26,7 +26,7 @@ function Navbar() {
       <div className='navbar-start'>
         <Link
           to='/'
-          className='font-extrabold text-transparent text-4xl bg-clip-text bg-gradient-to-r from-secondary to-primary'
+          className='font-extrabold text-4xl text-transparent bg-clip-text bg-gradient-to-r from-secondary to-primary'
         >
           QuizApp
         </Link>
