@@ -3,10 +3,10 @@ const asyncHandler = require('express-async-handler');
 const Quiz = require('../models/quizModel');
 const Question = require('../models/questionModel');
 
-// @desc    Get question
-// @route   GET /api/questions/:id/:quizId
-// @access  Private
-const getQuestion = asyncHandler(async (req, res) => {
+// @desc    Get questions
+// @route   GET /api/quizzes/:quizId/questions
+// @access  Public
+const getQuestions = asyncHandler(async (req, res) => {
   const quiz = await Quiz.findById(req.params.quizId);
 
   if (!quiz) {
@@ -14,33 +14,24 @@ const getQuestion = asyncHandler(async (req, res) => {
     throw new Error('Quiz not found');
   }
 
-  if (quiz.user.toString() !== req.user.id) {
-    res.status(401);
-    throw new Error('Not Authorized');
-  }
+  const questions = await Question.find({ quiz: req.params.quizId });
 
-  const question = await Question.findById(req.params.id);
-
-  if (!question) {
-    res.status(404);
-    throw new Error('Question not found');
-  }
-
-  res.status(200).json(question);
+  res.status(200).json(questions);
 });
 
 // @desc    Create new question
-// @route   POST /api/questions
+// @route   POST /api/quizzes/:quizId/questions
 // @access  Private
 const createQuestion = asyncHandler(async (req, res) => {
-  const { typeOfQuestion, questionTitle, options, quizId } = req.body;
+  const quizId = req.params.quizId;
+  const { questionType, questionText, options, correctAnswers } = req.body;
 
-  if (!questionTitle || !quizId || !options) {
+  if (!questionType || !questionText || !options || !correctAnswers) {
     res.status(400);
     throw new Error('Please include all fields');
   }
 
-  if (options.length < 2) {
+  if (options.length < 2 && questionType !== 'ShortAnswer') {
     res.status(400);
     throw new Error('Minimum 2 options');
   } else if (options.length > 6) {
@@ -61,9 +52,11 @@ const createQuestion = asyncHandler(async (req, res) => {
   }
 
   const question = await Question.create({
-    typeOfQuestion,
-    questionTitle,
+    questionType,
+    questionText,
     options,
+    correctAnswers,
+    quiz: quiz._id,
   });
 
   await Quiz.findByIdAndUpdate(quizId, { $push: { questions: question._id } });
@@ -72,10 +65,13 @@ const createQuestion = asyncHandler(async (req, res) => {
 });
 
 // @desc    Delete question
-// @route   DELETE /api/questions/:id/:quizId
+// @route   DELETE /api/quizzes/:quizId/questions/:id
 // @access  Private
 const deleteQuestion = asyncHandler(async (req, res) => {
-  const quiz = await Quiz.findById(req.params.quizId);
+  const quizId = req.params.quizId;
+  const questionId = req.params.id;
+
+  const quiz = await Quiz.findById(quizId);
 
   if (!quiz) {
     res.status(404);
@@ -87,7 +83,7 @@ const deleteQuestion = asyncHandler(async (req, res) => {
     throw new Error('Not Authorized');
   }
 
-  const question = await Question.findById(req.params.id);
+  const question = await Question.findById(questionId);
 
   if (!question) {
     res.status(404);
@@ -95,20 +91,20 @@ const deleteQuestion = asyncHandler(async (req, res) => {
   }
 
   // Delete Question from Quiz and from Question Collection
-  await Quiz.updateOne(
-    { _id: req.params.quizId },
-    { $pull: { questions: req.params.id } }
-  );
+  await Quiz.updateOne({ _id: quizId }, { $pull: { questions: questionId } });
   await question.remove();
 
   res.status(200).json(question);
 });
 
 // @desc    Update question
-// @route   PUT /api/questions/:id/:quizId
+// @route   PUT /api/quizzes/:quizId/questions/:id
 // @access  Private
 const updateQuestion = asyncHandler(async (req, res) => {
-  const quiz = await Quiz.findById(req.params.quizId);
+  const quizId = req.params.quizId;
+  const questionId = req.params.id;
+
+  const quiz = await Quiz.findById(quizId);
 
   if (!quiz) {
     res.status(404);
@@ -120,14 +116,14 @@ const updateQuestion = asyncHandler(async (req, res) => {
     throw new Error('Not Authorized');
   }
 
-  const question = await Question.findById(req.params.id);
+  const question = await Question.findById(questionId);
 
   if (!question) {
     res.status(404);
     throw new Error('Question not found');
   }
 
-  await Question.findByIdAndUpdate(req.params.id, {
+  await Question.findByIdAndUpdate(questionId, {
     $set: req.body,
   });
 
@@ -137,7 +133,7 @@ const updateQuestion = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
-  getQuestion,
+  getQuestions,
   createQuestion,
   deleteQuestion,
   updateQuestion,
