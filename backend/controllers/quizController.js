@@ -30,31 +30,49 @@ const getQuizzes = asyncHandler(async (req, res) => {
 
 // @desc    Get quiz
 // @route   GET /api/quizzes/:id
-// @access  Private
+// @access  Public
 const getQuiz = asyncHandler(async (req, res) => {
-  const quiz = await Quiz.findById(req.params.id).populate('questions');
+  const quiz = await Quiz.findById(req.params.id).populate(
+    'ranking.user questions'
+  );
 
   if (!quiz) {
     res.status(404);
     throw new Error('Quiz not found');
   }
 
+  quiz.ranking
+    .sort((a, b) => a.createdAt - b.createdAt)
+    .sort((a, b) => b.score - a.score);
+
   res.status(200).json(quiz);
 });
 
 // @desc    Create new quiz
 // @route   POST /api/quizzes
-// @access  Private
+// @access  Public
 const createQuiz = asyncHandler(async (req, res) => {
-  const { title } = req.body;
+  const {
+    title,
+    timeLimit,
+    negativePoints,
+    randomQuestionOrder,
+    randomOptionOrder,
+    noBackOption,
+  } = req.body;
 
   if (!title) {
     res.status(400);
-    throw new Error('Please add a title');
+    throw new Error('Please include all fields');
   }
 
   const quiz = await Quiz.create({
     title,
+    timeLimit,
+    negativePoints,
+    randomQuestionOrder,
+    randomOptionOrder,
+    noBackOption,
     user: req.user._id,
   });
 
@@ -109,9 +127,46 @@ const updateQuiz = asyncHandler(async (req, res) => {
   res.status(200).json(updatedQuiz);
 });
 
+// @desc    Post quiz game
+// @route   PUT /api/quizzes/:id/games
+// @access  Public
+const postQuizGame = asyncHandler(async (req, res) => {
+  const quiz = await Quiz.findById(req.params.id);
+
+  if (!quiz) {
+    res.status(404);
+    throw new Error('Quiz not found');
+  }
+
+  const { score } = req.body;
+
+  await Quiz.findByIdAndUpdate(
+    req.params.id,
+    {
+      $push: {
+        ranking: {
+          user: req.user._id,
+          score,
+        },
+      },
+    },
+    { new: true }
+  );
+
+  const updatedQuiz = await Quiz.findById(req.params.id).populate(
+    'ranking.user questions'
+  );
+
+  updatedQuiz.ranking
+    .sort((a, b) => a.createdAt - b.createdAt)
+    .sort((a, b) => b.score - a.score);
+
+  res.status(200).json(updatedQuiz);
+});
+
 // @desc    Like quiz
 // @route   PUT /api/quizzes/like
-// @access  Private
+// @access  Public
 const likeQuiz = asyncHandler(async (req, res) => {
   const quiz = await Quiz.findById(req.params.id);
 
@@ -136,7 +191,7 @@ const likeQuiz = asyncHandler(async (req, res) => {
 
 // @desc    Unlike quiz
 // @route   PUT /api/quizzes/unlike
-// @access  Private
+// @access  Public
 const unlikeQuiz = asyncHandler(async (req, res) => {
   const quiz = await Quiz.findById(req.params.id);
 
@@ -165,6 +220,7 @@ module.exports = {
   createQuiz,
   deleteQuiz,
   updateQuiz,
+  postQuizGame,
   likeQuiz,
   unlikeQuiz,
 };
