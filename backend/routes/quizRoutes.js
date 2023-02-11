@@ -6,11 +6,16 @@ const {
   createQuiz,
   deleteQuiz,
   updateQuiz,
+  postQuizGame,
   likeQuiz,
   unlikeQuiz,
 } = require('../controllers/quizController');
 
 const { protect } = require('../middleware/authMiddleware');
+
+// Re-route into question router
+const questionRouter = require('./questionRoutes');
+router.use('/:quizId/questions', questionRouter);
 
 router.route('/').get(getQuizzes).post(protect, createQuiz);
 
@@ -19,6 +24,8 @@ router
   .get(protect, getQuiz)
   .delete(protect, deleteQuiz)
   .put(protect, updateQuiz);
+
+router.route('/:id/games').post(protect, postQuizGame);
 
 router.route('/like/:id').put(protect, likeQuiz);
 
