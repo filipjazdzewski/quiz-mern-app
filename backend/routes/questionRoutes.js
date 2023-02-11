@@ -1,7 +1,7 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const {
-  getQuestion,
+  getQuestions,
   createQuestion,
   deleteQuestion,
   updateQuestion,
@@ -9,11 +9,10 @@ const {
 
 const { protect } = require('../middleware/authMiddleware');
 
-router.route('/').post(protect, createQuestion);
+router.route('/').get(protect, getQuestions).post(protect, createQuestion);
 
 router
-  .route('/:id/:quizId')
-  .get(protect, getQuestion)
+  .route('/:id')
   .delete(protect, deleteQuestion)
   .put(protect, updateQuestion);
 
