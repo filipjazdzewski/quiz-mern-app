@@ -9,7 +9,6 @@ const app = express();
 
 const http = require('http');
 const { Server } = require('socket.io');
-
 const server = http.createServer(app);
 
 const io = new Server(server, {
@@ -29,7 +28,6 @@ app.use(errorHandler);
 // **** ROUTES ****
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/quizzes', require('./routes/quizRoutes'));
-app.use('/api/questions', require('./routes/questionRoutes'));
 // **** ROUTES ****
 
 // **** SOCKET ****
