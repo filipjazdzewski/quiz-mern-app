@@ -1,29 +1,22 @@
 const mongoose = require('mongoose');
 
 const questionSchema = mongoose.Schema({
-  typeOfQuestion: {
-    type: String,
-    required: [true, 'Please choose the question type'],
-    enum: ['SingleChoice', 'MultipleChoices', 'TrueOrFalse'],
-    default: 'SingleChoice',
+  quiz: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Quiz',
   },
-  questionTitle: {
+  questionType: {
     type: String,
-    required: [true, 'Please add a question content'],
+    enum: ['SingleChoice', 'MultipleChoices', 'TrueOrFalse', 'ShortAnswer'],
+    required: [true, 'Please choose the question type'],
+  },
+  questionText: {
+    type: String,
+    required: [true, 'Please add a question text'],
     max: 80,
   },
-  options: [
-    {
-      optionTitle: {
-        type: String,
-        required: [true, 'Please add a question title'],
-      },
-      isCorrect: {
-        type: Boolean,
-        default: false,
-      },
-    },
-  ],
+  options: [{ type: String, required: true }],
+  correctAnswers: [{ type: String, required: true }],
 });
 
 module.exports = mongoose.model('Question', questionSchema);
